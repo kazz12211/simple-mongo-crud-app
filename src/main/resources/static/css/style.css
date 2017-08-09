@@ -1,0 +1,36 @@
+html {
+	position: relative;
+	min-height: 100%;
+}
+
+body {
+	overflow-x: hidden;
+	margin-bottom: 32px;
+}
+
+
+/* Overwrite Bootstrap styles */
+
+.navbar {
+	margin-bottom: 1px;
+    border-radius: 0px;
+}
+
+.navbar-inverse {
+	background-color: rgb(12, 140, 213);
+	border-color: rgb(12,140,213);	
+}
+
+.navbar-inverse .navbar-brand {
+	color: #fff;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+	color: #fff;
+}
+
+#content {
+	padding:20px 15px;
+}
+
+}

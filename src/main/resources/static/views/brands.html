@@ -1,0 +1,35 @@
+
+<div class="panel panel-default">
+	<div class="panel-heading">Brand</div>
+	<div class="panel-body">
+		<button class="btn btn-primary pull-right">
+			<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>Add
+		</button>
+	</div>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th class="col-xs-1 col-ms-1 col-md-1 col-lg-1">Edit</th>
+				<th class="col-xs-3 col-ms-3 col-md-3 col-lg-4">Name</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="brand in brands.content">
+				<td>
+					<a href="#" ng-show="show" ng-click="deleteBrand(brand)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+					<a href="#" ng-show="show" ng-click="editBrand(brand.id)"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+					<a href="#" ng-hide="hide" ng-click="updateBrand(brand)"><span class="glyphicon glyphicon-save" aria-hidden="true"></span></a>
+					<a href="#" ng-hide="hide" ng-click="undoEdit()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a>
+				</td>
+				<td ng-hide="brand.id==brandId">{{brand.name}}</td>
+				<td ng-show="brand.id==brandId">
+					<input type="text" id="editBrand" class="form-control" ng-model="brand.name">
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div ng-show="brands.totalPages > 1">
+<ul uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="limit" ng-change="pageChanged()"  class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+</div>
+<pre>Page: {{currentPage}} / {{brands.totalPages}}</pre>

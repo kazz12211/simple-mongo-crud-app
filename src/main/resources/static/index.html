@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>OAuth App</title>
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width" />
+<base href="/" />
+<link rel="stylesheet" type="text/css"
+	href="/webjars/bootstrap/3.3.7/css/bootstrap.css" />
+<link rel="stylesheet" href="css/style.css" type="text/css">
+<link rel="stylesheet" href="css/component.css" type="text/css">
+<script src="/webjars/jquery/2.1.1/jquery.min.js"></script>
+<script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/webjars/angularjs/1.6.2/angular.js"></script>
+<script src="/webjars/angularjs/1.6.2/angular-route.js"></script>
+<script src="/webjars/angularjs/1.6.2/angular-animate.js"></script>
+<script src="/webjars/angularjs/1.6.2/angular-touch.js"></script>
+<script src="scripts/ui-bootstrap-tpls-2.5.0.js"></script>
+<script src="scripts/app.js"></script>
+</head>
+
+<body ng-app="app">
+	<nav class="navbar navbar-inverse">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="/">MongoDB CRUD Example</a>
+			</div>
+			<ul class="nav navbar-nav navbar-right">
+				<li><a id="menu-toggle" href="#"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span></a></li>
+			</ul>
+		</div>
+	</nav>
+	
+	<div id="wrapper">
+		<!-- sidebar-wrapper -->
+		<div id="sidebar-wrapper">
+			<div id="sidebar-nav">
+				<ul class="sidebar-nav">
+					<li><a href="/#!/" id="go-home">Home</a>
+					<li><a href="/#!/brand" id="go-brand">Brand</a>
+				</ul>
+			</div>
+		</div>
+		<!-- /sidebar-wrapper -->
+		<!-- page-content-wrapper -->
+		<div id="page-content-wrapper">
+			<div class="content">
+				<div ng-view></div>
+			</div>
+		</div>
+		<!-- /page-content-wrapper -->
+	</div>
+
+	<script>
+		$("#menu-toggle").click(function(e) {
+			e.preventDefault();
+			$("#wrapper").toggleClass("toggled");
+		});
+		$("#page-content-wrapper").click(function(e) {
+			e.preventDefault();
+			$("#wrapper").toggleClass("toggled", false);
+		});
+		$("#go-home").click(function(e) {
+			$("#wrapper").toggleClass("toggled", false);
+		});
+		$("#go-brand").click(function(e) {
+			$("#wrapper").toggleClass("toggled", false);
+		});
+	</script>
+</body>
+
+</html>
