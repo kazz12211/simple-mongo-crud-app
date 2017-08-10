@@ -44,4 +44,12 @@ public class BrandController {
 		repo.delete(brandId);
 		return brandId;
 	}
+	
+	@RequestMapping(value="/api/brands", method=RequestMethod.POST)
+	public Brand createBrand(@RequestBody Map<String, Object> brand) {
+		Brand b = new Brand();
+		b.name = (String) brand.get("name");
+		repo.save(b);
+		return b;
+	}
 }

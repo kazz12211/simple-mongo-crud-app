@@ -1,0 +1,20 @@
+<div class="panel panel-default">
+	<div class="panel-heading">Add a new brand</div>
+	<form>
+		<div class="form-group">
+			<label for="brand-name">Name</label> <input id="brand-name"
+				type="text" class="form-control" ng-model="brand.name">
+		</div>
+		<button class="btn btn-primary"
+			ng-click="createBrand()">
+				<span class=" glyphicon
+			glyphicon-ok" aria-hidden="true">
+			</span> Save
+		</button>
+		
+		<button class="btn btn-default" ng-click="linkTo('/brand/')">
+			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+			Cancel
+		</button>
+	</form>
+</div>

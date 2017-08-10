@@ -1,25 +1,33 @@
-var app = angular.module("app", ['ngRoute', 'ui.bootstrap']);
+var app = angular.module("app", ['ngRoute', 'ngDialog', 'ui.bootstrap']);
 
 app.config(['$routeProvider', function($routeProvider) {
-	$routeProvider
+		
+    $routeProvider
 	.when("/", {
 		controller: 'home_controller',
 		templateUrl: 'views/home.html'
 	})
-	.when("/brand", {
+	.when("/brand/", {
 		controller: 'brand_controller',
 		templateUrl: 'views/brands.html'
+	})
+	.when("/newbrand/", {
+		controller: 'brand_controller',
+		templateUrl: 'views/newBrand.html'
 	})
 	.otherwise({
 		redirectTo: "/"
 	});
+}]);
+app.config(['$locationProvider', function($locationProvider) {
+	$locationProvider.html5Mode(true);
 }]);
 
 app.controller("home_controller", function($scope) {
 	
 });
 
-app.controller("brand_controller", function($scope, $http, $location) {
+app.controller("brand_controller", function($scope, $http, $location, ngDialog) {
 	
 	$scope.page = 0;
 	$scope.limit = 5;
@@ -29,6 +37,7 @@ app.controller("brand_controller", function($scope, $http, $location) {
 	$scope.brandId = "";
     $scope.show = true;
     $scope.hide = true;
+	$scope.brand = {};
 	
 	$scope.listBrands = function() {
 		console.log("Listing brands...");
@@ -42,8 +51,17 @@ app.controller("brand_controller", function($scope, $http, $location) {
 		});
 	};
 	
-	$scope.createBrand = function(brand) {
-		
+	$scope.createBrand = function() {
+		$http.post("/api/brands", $scope.brand).then(function(response) {
+	        $scope.show = true;
+	        $scope.hide = true;
+	        $scope.hideObj = false;
+	        $scope.showObj = false;
+	        $scope.brandId = "";
+	    	$location.path("/brand");
+		}, function(error) {
+			$scope.error = error;
+		});
 	};
 	
 	$scope.editBrand = function(brandId) {
@@ -55,15 +73,27 @@ app.controller("brand_controller", function($scope, $http, $location) {
 	};
 	
 	$scope.deleteBrand = function(brand) {
-		$http.delete("/api/brands", {params: {id: brand.id}}).then(function(response) {
-	        $scope.show = true;
-	        $scope.hide = true;
-	        $scope.hideObj = false;
-	        $scope.showObj = false;
-	        $scope.brandId = "";
-	    	$scope.listBrands();
-		}, function(error) {
-			$scope.error = error;
+		$scope.brand = brand;
+		ngDialog.openConfirm({
+			scope: $scope,
+			template: 'views/brandDeleteConfirm.html',
+			className: 'ngdialog-theme-default'
+		}).then(function() {
+			$http.delete("/api/brands", {params: {id: brand.id}}).then(function(response) {
+				$http.get("/api/brands", {params: {page: $scope.page, limit: $scope.limit}}).then(function(response) {
+					$scope.brands = response.data;
+					console.log($scope.brands);
+					$scope.currentPage = $scope.brands.number+1;
+					$scope.totalItems = $scope.brands.totalElements;
+			    	$location.path("/brand");
+				}, function(error) {
+					$scope.error = error;
+				});
+			}, function(error) {
+				$scope.error = error;
+			}, function() {
+				
+			});
 		});
 	}
 	
@@ -74,7 +104,7 @@ app.controller("brand_controller", function($scope, $http, $location) {
 	        $scope.hideObj = false;
 	        $scope.showObj = false;
 	        $scope.brandId = "";
-	    	$scope.listBrands();
+	    	$location.path("/brand");
 		}, function(error) {
 			$scope.error = error;
 		});
@@ -96,6 +126,10 @@ app.controller("brand_controller", function($scope, $http, $location) {
 	    console.log('Page changed to: ' + $scope.currentPage);
 	    $scope.page = $scope.currentPage - 1;
 	    $scope.listBrands();
+	}
+	
+	$scope.linkTo = function(path) {
+		$location.path(path);
 	}
 	
 	$scope.listBrands();
