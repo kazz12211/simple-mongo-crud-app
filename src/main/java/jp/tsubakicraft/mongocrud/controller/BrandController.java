@@ -40,9 +40,9 @@ public class BrandController {
 	}
 	
 	@RequestMapping(value="/api/brands", method=RequestMethod.DELETE)
-	public String deleteBrand(@RequestParam(value="id", required=true) String brandId) {
-		repo.delete(brandId);
-		return brandId;
+	public Map<String, Object> deleteBrand(@RequestBody Map<String, Object> brand) {
+		repo.delete((String) brand.get("id"));
+		return brand;
 	}
 	
 	@RequestMapping(value="/api/brands", method=RequestMethod.POST)

@@ -39,26 +39,25 @@
 		</div>
 	</nav>
 	
+<div class="container">
 	<div id="wrapper">
 		<!-- sidebar-wrapper -->
 		<div id="sidebar-wrapper">
 			<div id="sidebar-nav">
 				<ul class="sidebar-nav">
-					<li><a href="/" id="go-home">Home</a>
-					<li><a href="/brand/" id="go-brand">Brand</a>
+					<li><a href="/" onclick='$("#wrapper").toggleClass("toggled", false);'>Home</a>
+					<li><a href="/brand/" onclick='$("#wrapper").toggleClass("toggled", false);'>Brand</a>
 				</ul>
 			</div>
 		</div>
 		<!-- /sidebar-wrapper -->
 		<!-- page-content-wrapper -->
 		<div id="page-content-wrapper">
-			<div class="content">
 				<div ng-view></div>
-			</div>
 		</div>
 		<!-- /page-content-wrapper -->
 	</div>
-
+</div>
 	<script>
 		$("#menu-toggle").click(function(e) {
 			e.preventDefault();
@@ -68,13 +67,6 @@
 			e.preventDefault();
 			$("#wrapper").toggleClass("toggled", false);
 		});
-		$("#go-home").click(function(e) {
-			$("#wrapper").toggleClass("toggled", false);
-		});
-		$("#go-brand").click(function(e) {
-			$("#wrapper").toggleClass("toggled", false);
-		});
 	</script>
-</body>
 
 </html>

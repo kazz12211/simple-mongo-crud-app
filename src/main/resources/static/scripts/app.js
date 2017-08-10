@@ -27,7 +27,7 @@ app.controller("home_controller", function($scope) {
 	
 });
 
-app.controller("brand_controller", function($scope, $http, $location, ngDialog) {
+app.controller("brand_controller", function($scope, $http, $location, $q, ngDialog) {
 	
 	$scope.page = 0;
 	$scope.limit = 5;
@@ -78,22 +78,14 @@ app.controller("brand_controller", function($scope, $http, $location, ngDialog) 
 			scope: $scope,
 			template: 'views/brandDeleteConfirm.html',
 			className: 'ngdialog-theme-default'
-		}).then(function() {
-			$http.delete("/api/brands", {params: {id: brand.id}}).then(function(response) {
-				$http.get("/api/brands", {params: {page: $scope.page, limit: $scope.limit}}).then(function(response) {
-					$scope.brands = response.data;
-					console.log($scope.brands);
-					$scope.currentPage = $scope.brands.number+1;
-					$scope.totalItems = $scope.brands.totalElements;
-			    	$location.path("/brand");
-				}, function(error) {
-					$scope.error = error;
-				});
+		}).then(function(value) {
+			$http.delete("/api/brands", {data: brand, headers: {'Content-Type':'application/json; charset=UTF-8'}}).then(function(response) {
+				console.log("response");
+				$scope.listBrands();
 			}, function(error) {
 				$scope.error = error;
-			}, function() {
-				
 			});
+		}, function(value) {
 		});
 	}
 	
