@@ -1,0 +1,38 @@
+<div class="panel panel-default">
+	<div class="panel-heading">ADD A BIKE</div>
+	<form>
+		<div class="form-group">
+			<label for="car-name">Name</label>
+			<input id="car-name" type="text" class="form-control" ng-model="car.name">
+		</div>
+		<div class="form-group">
+			<label for="car-price">Price</label>
+			<input id="car-price" type="number" class="form-control" ng-model="car.price">
+		</div>
+		<div class="form-group">
+			<label for="brand">Brand</label>
+			<select id="brand" class="form-control" ng-options="brand.name for brand in brands" ng-model="selectedBrand" ng-change="selectedBrandChanged()">
+			</select>
+		</div>
+		<div class="form-group">
+			<label for="model">Model</label>
+			<select id="model" class="form-control" ng-model="selectedModel" ng-options="model.name for model in models" ng-change="selectedModelChanged()">
+			</select>
+		</div>
+		<div class="form-group">
+			<label for="car-year">Year</label>
+			<input id="car-year" type="number" class="form-control" ng-model="car.year">
+		</div>
+		<button class="btn btn-primary"
+			ng-click="createCar()">
+				<span class=" glyphicon
+			glyphicon-ok" aria-hidden="true">
+			</span> Save
+		</button>
+		
+		<button class="btn btn-default" ng-click="linkTo('/car/')">
+			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+			Cancel
+		</button>
+	</form>
+</div>

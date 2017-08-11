@@ -1,0 +1,24 @@
+<div class="panel panel-default">
+	<div class="panel-heading">ADD A MODEL</div>
+	<form>
+		<div class="form-group">
+			<label for="model-name">Name</label>
+			<input id="model-name" type="text" class="form-control" ng-model="model.name">
+		</div>
+		<div class="form-group">
+			<label for="brand">Brand</label>
+			<select id="brand" class="form-control" ng-model="model.brand" ng-options="brand.name for brand in brands"/></select>
+		</div>
+		<button class="btn btn-primary"
+			ng-click="createModel()">
+				<span class=" glyphicon
+			glyphicon-ok" aria-hidden="true">
+			</span> Save
+		</button>
+		
+		<button class="btn btn-default" ng-click="linkTo('/model/')">
+			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+			Cancel
+		</button>
+	</form>
+</div>

@@ -1,0 +1,41 @@
+
+<div class="panel panel-default">
+	<div class="panel-heading">MODEL</div>
+	<div class="panel-body">
+		<span class="btn btn-primary pull-right" ng-click="linkTo('/newmodel/')">
+			<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
+		</span>
+	</div>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th class="col-xs-1 col-ms-1 col-md-1 col-lg-1">Edit</th>
+				<th class="col-xs-3 col-ms-3 col-md-3 col-lg-4">Name</th>
+				<th class="col-xs-3 col-ms-3 col-md-3 col-lg-4">Brand</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="model in models.content">
+				<td>
+					<a ng-show="show" ng-click="deleteModel(model)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+					<a ng-show="show" ng-click="editModel(model.id)"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+					<a ng-hide="hide" ng-click="updateModel(model)"><span class="glyphicon glyphicon-save" aria-hidden="true"></span></a>
+					<a ng-hide="hide" ng-click="undoEdit()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a>
+				</td>
+				<td ng-hide="model.id==modelId">{{model.name}}</td>
+				<td ng-hide="model.id==modelId">{{model.brand.name}}</td>
+				<td ng-show="model.id==modelId">
+					<input type="text" class="form-control" ng-model="model.name">
+				</td>
+				<td ng-show="model.id==modelId">
+					<select class="form-control" ng-model="model.brand" ng-options="brand.name for brand in brands">
+					</select>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div ng-show="models.totalPages > 0">
+<ul uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="limit" ng-change="pageChanged()"  class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+<pre>Page: {{currentPage}} / {{models.totalPages}}</pre>
+</div>

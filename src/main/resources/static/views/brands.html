@@ -1,6 +1,6 @@
 
 <div class="panel panel-default">
-	<div class="panel-heading">Brand</div>
+	<div class="panel-heading">BRAND</div>
 	<div class="panel-body">
 		<span class="btn btn-primary pull-right" ng-click="linkTo('/newbrand/')">
 			<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
@@ -29,7 +29,7 @@
 		</tbody>
 	</table>
 </div>
-<div ng-show="brands.totalPages > 1">
+<div ng-show="brands.totalPages > 0">
 <ul uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="limit" ng-change="pageChanged()"  class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
-</div>
 <pre>Page: {{currentPage}} / {{brands.totalPages}}</pre>
+</div>

@@ -1,0 +1,57 @@
+
+<div class="panel panel-default">
+	<div class="panel-heading">BIKE</div>
+	<div class="panel-body">
+		<span class="btn btn-primary pull-right" ng-click="linkTo('/newcar/')">
+			<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
+		</span>
+	</div>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th class="col-xs-1 col-ms-1 col-md-1 col-lg-1">Edit</th>
+				<th class="col-xs-3 col-ms-3 col-md-3 col-lg-4">Name</th>
+				<th class="col-xs-3 col-ms-3 col-md-3 col-lg-4">Price</th>
+				<th class="col-xs-3 col-ms-3 col-md-3 col-lg-4">Brand</th>
+				<th class="col-xs-3 col-ms-3 col-md-3 col-lg-4">Model</th>
+				<th class="col-xs-3 col-ms-3 col-md-3 col-lg-4">Year</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="car in cars.content">
+				<td>
+					<a ng-show="show" ng-click="deleteCar(car)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+					<a ng-show="show" ng-click="editCar(car)"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+					<a ng-hide="hide" ng-click="updateCar(car)"><span class="glyphicon glyphicon-save" aria-hidden="true"></span></a>
+					<a ng-hide="hide" ng-click="undoEdit()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a>
+				</td>
+				<td ng-hide="car.id==carId">{{car.name}}</td>
+				<td ng-hide="car.id==carId">{{car.price}}</td>
+				<td ng-hide="car.id==carId">{{car.model.brand.name}}</td>
+				<td ng-hide="car.id==carId">{{car.model.name}}</td>
+				<td ng-hide="car.id==carId">{{car.year}}</td>
+				<td ng-show="car.id==carId">
+					<input type="text" class="form-control" ng-model="car.name">
+				</td>
+				<td ng-show="car.id==carId">
+					<input type="number"  class="form-control" ng-model="car.price">
+				</td>
+				<td ng-show="car.id==carId">
+					<select class="form-control" ng-model="selectedBrand" ng-options="brand.name for brand in brands" ng-change="selectedBrandChanged()">
+					</select>
+				</td>
+				<td ng-show="car.id==carId">
+					<select class="form-control" ng-model="selectedModel" ng-options="model.name for model in models" ng-change="selectedModelChanged()">
+					</select>
+				</td>
+				<td ng-show="car.id==carId">
+					<input type="number" class="form-control" ng-model="car.year">
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div ng-show="cars.totalPages > 0">
+<ul uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="limit" ng-change="pageChanged()"  class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+<pre>Page: {{currentPage}} / {{brands.totalPages}}</pre>
+</div>
