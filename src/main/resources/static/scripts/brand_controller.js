@@ -9,9 +9,11 @@ app.controller("brand_controller", function($scope, $http, $location, $q, ngDial
     $scope.show = true;
     $scope.hide = true;
 	$scope.brand = {};
+	$scope.sortColumn = "name";
+	$scope.sortDir = "ASC";
 	
 	$scope.listBrands = function() {
-		$http.get("/api/brands", {params: {page: $scope.page, limit: $scope.limit}}).then(function(response) {
+		$http.get("/api/brands", {params: {page: $scope.page, limit: $scope.limit, sortColumn: $scope.sortColumn, sortDir: $scope.sortDir}}).then(function(response) {
 			$scope.brands = response.data;
 			console.log($scope.brands);
 			$scope.currentPage = $scope.brands.number+1;
@@ -104,6 +106,16 @@ app.controller("brand_controller", function($scope, $http, $location, $q, ngDial
 	
 	$scope.linkTo = function(path) {
 		$location.path(path);
+	};
+	
+	$scope.sort = function(column) {
+		if($scope.sortColumn == column) {
+			$scope.sortDir = $scope.sortDir == "ASC" ? "DESC" : "ASC";
+		} else {
+			$scope.sortDir = "ASC";
+			$scope.sortColumn = column;
+		}
+		$scope.listBrands();
 	};
 	
 	$scope.listBrands();
