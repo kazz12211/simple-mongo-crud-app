@@ -46,17 +46,30 @@ app.controller("model_controller", function($scope, $http, $location, $q, ngDial
 	
 	$scope.deleteModel = function(model) {
 		$scope.model = model;
-		ngDialog.openConfirm({
-			scope: $scope,
-			template: 'views/modelDeleteConfirm.html',
-			className: 'ngdialog-theme-default'
-		}).then(function(value) {
-			$http.delete("/api/models", {data: model, headers: {'Content-Type':'application/json; charset=UTF-8'}}).then(function(response) {
-				$scope.listModels();
-			}, function(error) {
-				$scope.error = error;
-			});
-		}, function(value) {
+		$http.get("/api/cars/countModelCar", {params:{modelId: model.id}}).then(function(response) {
+			var count = response.data;
+			console.log(count);
+			if(count == 0) {
+				ngDialog.openConfirm({
+					scope: $scope,
+					template: 'views/modelDeleteConfirm.html',
+					className: 'ngdialog-theme-default'
+				}).then(function(value) {
+					$http.delete("/api/models", {data: model, headers: {'Content-Type':'application/json; charset=UTF-8'}}).then(function(response) {
+						$scope.listModels();
+					}, function(error) {
+						$scope.error = error;
+					});
+				}, function(value) {
+				});
+			} else {
+				ngDialog.open({
+					template: '<p>Model <strong>' + model.name + '</strong> cannot be deleted. There are ' + count + ' cars exists.</p>\
+					<div class="ngdialog-buttons">\
+					<button class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">OK</button></div>',
+					plain: true
+				});
+			}
 		});
 	};
 	

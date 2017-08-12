@@ -2,6 +2,7 @@ package jp.tsubakicraft.mongocrud.controller;
 
 import java.util.Map;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -67,5 +68,10 @@ public class CarController {
 		}
 		repo.save(c);
 		return c;
+	}
+	
+	@RequestMapping(value="/api/cars/countModelCar", method=RequestMethod.GET)
+	public Long countModelCar(@RequestParam(value="modelId", required=true) String modelId) {
+		return repo.countModelCar(new ObjectId(modelId));
 	}
 }

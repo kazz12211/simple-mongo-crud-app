@@ -10,7 +10,7 @@
 このプロジェクトは諸機能の開発を終えていないため、現時点ですべての機能が正しく動作しません。*
 
 
-##開発環境
+## 開発環境
 - Ubuntu 16.0.4 LTS
 - Spring Tool Suite 3.8.3 (Eclipse Java EE IDE Neon Release 4.6.0)
 - Java 1.8.0

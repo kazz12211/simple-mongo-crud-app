@@ -44,17 +44,31 @@ app.controller("brand_controller", function($scope, $http, $location, $q, ngDial
 	
 	$scope.deleteBrand = function(brand) {
 		$scope.brand = brand;
-		ngDialog.openConfirm({
-			scope: $scope,
-			template: 'views/brandDeleteConfirm.html',
-			className: 'ngdialog-theme-default'
-		}).then(function(value) {
-			$http.delete("/api/brands", {data: brand, headers: {'Content-Type':'application/json; charset=UTF-8'}}).then(function(response) {
-				$scope.listBrands();
-			}, function(error) {
-				$scope.error = error;
-			});
-		}, function(value) {
+		$http.get("/api/models/countBrandModel", {params:{brandId: brand.id}}).then(function(response) {
+			var count = response.data;
+			if(count == 0) {
+				ngDialog.openConfirm({
+					scope: $scope,
+					template: 'views/brandDeleteConfirm.html',
+					className: 'ngdialog-theme-default'
+				}).then(function(value) {
+					$http.delete("/api/brands", {data: brand, headers: {'Content-Type':'application/json; charset=UTF-8'}}).then(function(response) {
+						$scope.listBrands();
+					}, function(error) {
+						$scope.error = error;
+					});
+				}, function(value) {
+				});
+			} else {
+				ngDialog.open({
+					template: '<p>Brand <strong>' + brand.name + '</strong> cannot be deleted. There are ' + count + ' models exists.</p>\
+					<div class="ngdialog-buttons">\
+					<button class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">OK</button></div>',
+					plain: true
+				});
+			}
+		}, function(error) {
+			$scope.error = error;
 		});
 	};
 	

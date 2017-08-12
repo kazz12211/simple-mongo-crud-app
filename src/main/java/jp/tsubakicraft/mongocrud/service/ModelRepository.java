@@ -12,4 +12,7 @@ public interface ModelRepository extends MongoRepository<Model, String> {
 
 	@Query(value="{brand.$id : ?0}")
 	public List<Model> findByBrandId(ObjectId brandId);
+	
+	@Query(value="{brand.$id : ?0}", count=true)
+	public Long countBrandModel(ObjectId brandId);
 }

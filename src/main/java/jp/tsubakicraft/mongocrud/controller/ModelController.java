@@ -26,22 +26,23 @@ public class ModelController {
 
 	@Autowired
 	private ModelRepository repo;
-	
+
 	@Autowired
 	private BrandRepository brandRepo;
-	
-	@RequestMapping(value="/api/models", method=RequestMethod.GET)
-	public Page<?> listModels(@RequestParam(value="page", required=true) int page, @RequestParam(value="limit",required=true) int limit) {
+
+	@RequestMapping(value = "/api/models", method = RequestMethod.GET)
+	public Page<?> listModels(@RequestParam(value = "page", required = true) int page,
+			@RequestParam(value = "limit", required = true) int limit) {
 		Pageable pageRequest = new PageRequest(page, limit);
 		Page<Model> p = repo.findAll(pageRequest);
 		return p;
 	}
-	
-	@RequestMapping(value="/api/models", method=RequestMethod.PUT)
+
+	@RequestMapping(value = "/api/models", method = RequestMethod.PUT)
 	public Model updateModel(@RequestBody Model model) {
 		Brand b = brandRepo.findOne(model.brand.id);
 		Model m = repo.findOne(model.id);
-		if(m != null) {
+		if (m != null) {
 			m.name = model.name;
 			m.brand = b;
 			repo.save(m);
@@ -50,27 +51,32 @@ public class ModelController {
 			return null;
 		}
 	}
-	
-	@RequestMapping(value="/api/models", method=RequestMethod.DELETE)
+
+	@RequestMapping(value = "/api/models", method = RequestMethod.DELETE)
 	public Model deleteModel(@RequestBody Model model) {
 		repo.delete(model.id);
 		return model;
 	}
-	
-	@RequestMapping(value="/api/models", method=RequestMethod.POST)
+
+	@RequestMapping(value = "/api/models", method = RequestMethod.POST)
 	public Model createModel(@RequestBody Map<String, Object> model) {
-		Brand b = brandRepo.findOne((String) ((Map)model.get("brand")).get("id"));
+		Brand b = brandRepo.findOne((String) ((Map) model.get("brand")).get("id"));
 		Model m = new Model();
 		m.name = (String) model.get("name");
-		if(b != null) {
+		if (b != null) {
 			m.brand = b;
-		} 
+		}
 		repo.save(m);
 		return m;
 	}
-	
+
 	@RequestMapping(value="/api/models/listBrandModels", method=RequestMethod.GET)
 	public List<Model> listBrandModels(@RequestParam(value="brandId", required=true) String brandId) {
 		return repo.findByBrandId(new ObjectId(brandId));
+	}
+
+	@RequestMapping(value="/api/models/countBrandModel", method=RequestMethod.GET)
+	public Long countBrandModel(@RequestParam(value="brandId", required=true) String brandId) {
+		return repo.countBrandModel(new ObjectId(brandId));
 	}
 }
