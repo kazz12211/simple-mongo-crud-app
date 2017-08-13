@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,8 +31,12 @@ public class ModelController {
 
 	@RequestMapping(value = "/api/models", method = RequestMethod.GET)
 	public Page<?> listModels(@RequestParam(value = "page", required = true) int page,
-			@RequestParam(value = "limit", required = true) int limit) {
-		Pageable pageRequest = new PageRequest(page, limit);
+			@RequestParam(value = "limit", required = true) int limit,
+			@RequestParam(value = "sortColumn", required = true) String column,
+			@RequestParam(value = "sortDir", required = true) String dir) {
+		Sort sort = new Sort(
+				new Sort.Order("asc".equalsIgnoreCase(dir) ? Sort.Direction.ASC : Sort.Direction.DESC, column));
+		Pageable pageRequest = new PageRequest(page, limit, sort);
 		Page<Model> p = repo.findAll(pageRequest);
 		return p;
 	}
@@ -68,13 +73,13 @@ public class ModelController {
 		return m;
 	}
 
-	@RequestMapping(value="/api/models/listBrandModels", method=RequestMethod.GET)
-	public List<Model> listBrandModels(@RequestParam(value="brandId", required=true) String brandId) {
+	@RequestMapping(value = "/api/models/listBrandModels", method = RequestMethod.GET)
+	public List<Model> listBrandModels(@RequestParam(value = "brandId", required = true) String brandId) {
 		return repo.findByBrandId(new ObjectId(brandId));
 	}
 
-	@RequestMapping(value="/api/models/countBrandModel", method=RequestMethod.GET)
-	public Long countBrandModel(@RequestParam(value="brandId", required=true) String brandId) {
+	@RequestMapping(value = "/api/models/countBrandModel", method = RequestMethod.GET)
+	public Long countBrandModel(@RequestParam(value = "brandId", required = true) String brandId) {
 		return repo.countBrandModel(new ObjectId(brandId));
 	}
 }

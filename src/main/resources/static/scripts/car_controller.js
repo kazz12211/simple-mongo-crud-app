@@ -15,9 +15,11 @@ app.controller("car_controller", function($scope, $http, $location, $q, ngDialog
 	$scope.brands = [];
 	$scope.selectedBrand = null;
 	$scope.selectedModel = null;
+	$scope.sortColumn = "name";
+	$scope.sortDir = "ASC";
 	
 	$scope.listCars = function() {
-		$http.get("/api/cars", {params: {page: $scope.page, limit: $scope.limit}}).then(function(response) {
+		$http.get("/api/cars", {params: {page: $scope.page, limit: $scope.limit, sortColumn: $scope.sortColumn, sortDir: $scope.sortDir}}).then(function(response) {
 			$scope.cars = response.data;
 			console.log($scope.cars);
 			$scope.currentPage = $scope.cars.number+1;
@@ -136,6 +138,15 @@ app.controller("car_controller", function($scope, $http, $location, $q, ngDialog
 		$scope.car.model = $scope.selectedModel;
 	};
 	
+	$scope.sort = function(column) {
+		if($scope.sortColumn == column) {
+			$scope.sortDir = $scope.sortDir == "ASC" ? "DESC" : "ASC";
+		} else {
+			$scope.sortDir = "ASC";
+			$scope.sortColumn = column;
+		}
+		$scope.listCars();
+	};
 	
 	$q.all([
 	    $scope.listBrands(), $scope.listCars()

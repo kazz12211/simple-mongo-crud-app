@@ -10,9 +10,11 @@ app.controller("model_controller", function($scope, $http, $location, $q, ngDial
     $scope.hide = true;
 	$scope.model = {};
 	$scope.brands = [];
+	$scope.sortColumn = "name";
+	$scope.sortDir = "ASC";
 	
 	$scope.listModels = function() {
-		$http.get("/api/models", {params: {page: $scope.page, limit: $scope.limit}}).then(function(response) {
+		$http.get("/api/models", {params: {page: $scope.page, limit: $scope.limit, sortColumn: $scope.sortColumn, sortDir: $scope.sortDir}}).then(function(response) {
 			$scope.models = response.data;
 			console.log($scope.models);
 			$scope.currentPage = $scope.models.number+1;
@@ -116,6 +118,15 @@ app.controller("model_controller", function($scope, $http, $location, $q, ngDial
 		});
 	};
 
+	$scope.sort = function(column) {
+		if($scope.sortColumn == column) {
+			$scope.sortDir = $scope.sortDir == "ASC" ? "DESC" : "ASC";
+		} else {
+			$scope.sortDir = "ASC";
+			$scope.sortColumn = column;
+		}
+		$scope.listModels();
+	};
 	$q.all([
 	    $scope.listBrands(), $scope.listModels()
 	]).then(function(response) {
