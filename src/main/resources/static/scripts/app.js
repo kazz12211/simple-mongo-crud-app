@@ -31,6 +31,14 @@ app.config(['$routeProvider', function($routeProvider) {
 		controller: 'car_controller',
 		templateUrl: 'views/newCar.html'
 	})
+	.when("/sales/", {
+		controller: 'sales_controller',
+		templateUrl: 'views/sales.html'
+	})
+	.when("/newsales/", {
+		controller: 'sales_controller',
+		templateUrl: 'views/newSales.html'
+	})
 	.otherwise({
 		redirectTo: "/"
 	});

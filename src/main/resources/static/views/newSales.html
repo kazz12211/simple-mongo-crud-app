@@ -1,0 +1,38 @@
+<div class="panel panel-default">
+	<div class="panel-heading">ADD A SALES PERFORMANCE</div>
+	<form>
+		<div class="form-group">
+			<label for="brand">Brand</label>
+			<select id="brand" class="form-control" ng-options="brand.name for brand in brands" ng-model="selectedBrand" ng-change="selectedBrandChanged()">
+			</select>
+		</div>
+		<div class="form-group">
+			<label for="model">Model</label>
+			<select id="model" class="form-control" ng-model="selectedModel" ng-options="model.name for model in models" ng-change="selectedModelChanged()">
+			</select>
+		</div>
+		<div class="form-group">
+			<label for="year">Year</label>
+			<select id="year" class="form-control" ng-model="selectedYear" ng-options="year for year in years"></select>
+		</div>
+		<div class="form-group">
+			<label for="quarter">Quarter</label>
+			<select id="quarter" class="form-control" ng-model="selectedQuarter" ng-options="quarter for quarter in quarters"></select>
+		</div>
+		<div class="form-group">
+			<label for="amount">Amount</label>
+			<input id="amount" type="number" class="form-control" ng-model="salesPerformance.amount">
+		</div>
+		<button class="btn btn-primary"
+			ng-click="createSalesPerformance()">
+				<span class=" glyphicon
+			glyphicon-ok" aria-hidden="true">
+			</span> Save
+		</button>
+		
+		<button class="btn btn-default" ng-click="linkTo('/sales/')">
+			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+			Cancel
+		</button>
+	</form>
+</div>

@@ -131,3 +131,16 @@ BrandエンティティとModelエンティティの例。
 
 
 ### MongoRepositoryを使ったページネーション
+
+PageRequestを使用してMongoRepositoryのメソッドを呼び出す。
+
+	@Autowired
+	private BrandRepository repo;
+	...
+	@RequestMapping(value="/api/brands", method=RequestMethod.GET)
+	public Page<Brand> listBrands(@RequestParam(value="page", required=true) int page, @RequestParam(value="limit", required=true) int limit) {
+		Pageable pageRequest = new PageRequest(page, limit);
+		return repo.findAll(pageRequest);
+	}
+	
+*package jp.tsubakicraft.mongocrud.service.BrandRepository.javaを参照*
