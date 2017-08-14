@@ -2,36 +2,39 @@
 <div class="panel panel-default">
 	<div class="panel-heading">SALES PERFORMANCE</div>
 	<div class="panel-body">
+		<span class="col-xs-2 col-ms-2 col-md-2 col-lg-2 pull-left">
+			<div class="form-group">
+				<label for="fromYear">Fiscal Year</label>
+				<select id="fromYear" class="form-control" ng-model="selectedFiscalYear" ng-options="year for year in years" ng-change="filter()"></select>
+			</div>
+		</span>
 		<span class="btn btn-primary pull-right" ng-click="linkTo('/newsales/')">
 			<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
 		</span>
 	</div>
 	<table class="table table-striped">
 		<thead>
-			<tr>
-				<th class="col-xs-1 col-ms-1 col-md-1 col-lg-1">Edit</th>
-				<th class="col-xs-3 col-ms-3 col-md-3 col-lg-4">Brand</th>
-				<th class="col-xs-2 col-ms-2 col-md-2 col-lg-2">Model</th>
-				<th class="col-xs-1 col-ms-1 col-md-1 col-lg-1">Year</th>
-				<th class="col-xs-1 col-ms-1 col-md-1 col-lg-1">Quarter</th>
-				<th class="col-xs-2 col-ms-2 col-md-2 col-lg-2">Amount</th>
-			</tr>
+		<tr>
+			<th></th>
+			<th colspan="4" class="text-center">{{selectedFiscalYear}}</th>
+		</tr>
+		<tr>
+			<th>Model</th>
+			<th class="col-xs-2 col-ms-2 col-md-2 col-lg-2 text-center">Q1</th>
+			<th class="col-xs-2 col-ms-2 col-md-2 col-lg-2 text-center">Q2</th>
+			<th class="col-xs-2 col-ms-2 col-md-2 col-lg-2 text-center">Q3</th>
+			<th class="col-xs-2 col-ms-2 col-md-2 col-lg-2 text-center">Q4</th>
+		</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="salesPerformance in salesPerformances.content">
-				<td>
-					<a ng-click="deleteSalesPerformance(salesPerformance)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
-				</td>
-				<td>{{salesPerformance.model.brand.name}}</td>
-				<td>{{salesPerformance.model.name}}</td>
-				<td>{{salesPerformance.year}}</td>
-				<td>{{salesPerformance.quarter}}</td>
-				<td>{{salesPerformance.amount}}</td>
+			<tr ng-repeat="data in pivotData">
+				<td>{{data.name}}</td>
+				<td class="text-right">{{data.amount[0]}}</td>
+				<td class="text-right">{{data.amount[1]}}</td>
+				<td class="text-right">{{data.amount[2]}}</td>
+				<td class="text-right">{{data.amount[3]}}</td>
 			</tr>
 		</tbody>
 	</table>
 </div>
-<div ng-show="salesPerformances.totalPages > 0">
-<ul uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="limit" ng-change="pageChanged()"  class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
-<pre>Page: {{currentPage}} / {{salesPerformances.totalPages}}</pre>
-</div>
+

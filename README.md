@@ -127,7 +127,7 @@ BrandエンティティとModelエンティティの例。
 	public Long countBrandModel(ObjectId brandId);
 	
  
-*package jp.tsubakicraft.mongocrud.service.ModelRepository.javaを参照*
+*jp.tsubakicraft.mongocrud.service.ModelRepository.javaを参照*
 
 
 ### MongoRepositoryを使ったページネーション
@@ -143,4 +143,4 @@ PageRequestを使用してMongoRepositoryのメソッドを呼び出す。
 		return repo.findAll(pageRequest);
 	}
 	
-*package jp.tsubakicraft.mongocrud.service.BrandRepository.javaを参照*
+*jp.tsubakicraft.mongocrud.service.BrandRepository.javaを参照*

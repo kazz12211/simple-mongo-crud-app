@@ -28,13 +28,9 @@ public class SalesPerformanceController {
 	private ModelRepository modelRepo;
 
 	@RequestMapping(value = "/api/sales", method = RequestMethod.GET)
-	public Page<SalesPerformance> listSales(@RequestParam(value = "page", required = true) int page,
-			@RequestParam(value = "limit", required = true) int limit,
-			@RequestParam(value = "fromYear", required = true) int fromYear,
-			@RequestParam(value = "toYear", required = true) int toYear) {
+	public List<SalesPerformance> listSales(@RequestParam(value = "fiscalYear", required = true) int fiscalYear) {
 		Sort sort = new Sort(new Sort.Order[] { new Sort.Order("year"), new Sort.Order("quarter") });
-		Pageable pageRequest = new PageRequest(page, limit, sort);
-		return repo.findAll(pageRequest);
+		return repo.findYearPerformances(fiscalYear, sort);
 	}
 
 	@RequestMapping(value = "/api/sales", method = RequestMethod.POST)

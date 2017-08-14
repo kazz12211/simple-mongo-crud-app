@@ -1,10 +1,4 @@
 app.controller("sales_controller", function($scope, $http, $location, $q, ngDialog) {
-	$scope.page = 0;
-	$scope.limit = 5;
-	$scope.fromYear = 2017;
-	$scope.toYear = 2017;
-	$scope.currentPage = 1;
-	$scope.totalItems = 0;
 	$scope.salesPerformances = null;
 	$scope.salesPerformanceId = "";
 	$scope.salesPerformance = {};
@@ -18,12 +12,13 @@ app.controller("sales_controller", function($scope, $http, $location, $q, ngDial
 	$scope.quarters = [1, 2, 3, 4];
 	$scope.selectedYear = 2017;
 	$scope.selectedQuarter = 2;
+	$scope.selectedFiscalYear = 2017;
+	$scope.pivotData = [];
 	
 	$scope.listSalesPerformances = function() {
-		$http.get("/api/sales", {params: {page: $scope.page, limit: $scope.limit, fromYear: $scope.fromYear, toYear: $scope.toYear}}).then(function(response) {
+		$http.get("/api/sales", {params: {fiscalYear: $scope.selectedFiscalYear}}).then(function(response) {
 			$scope.salesPerformances = response.data;
-			$scope.currentPage = $scope.salesPerformances.number + 1;
-			$scope.totalItems = $scope.salesPerformances.totalElements;
+			createPivotData();
 		}, function(error) {
 			$scope.error = error;
 		})
@@ -46,15 +41,6 @@ app.controller("sales_controller", function($scope, $http, $location, $q, ngDial
 		}, function(error) {
 			$scope.error = error;
 		});
-	};
-
-	$scope.setPage = function() {
-	    $scope.currentPage = pageNo;
-	};
-	
-	$scope.pageChanged = function() {
-	    $scope.page = $scope.currentPage - 1;
-	    $scope.listSalesPerformances();
 	};
 	
 	$scope.linkTo = function(path) {
@@ -95,6 +81,34 @@ app.controller("sales_controller", function($scope, $http, $location, $q, ngDial
 	$scope.selectedModelChanged = function() {
 		$scope.salesPerformance.model = $scope.selectedModel;
 	};
+	
+	$scope.filter = function() {
+		$scope.listSalesPerformances();
+	};
+	
+	
+	function createPivotData() {
+		$scope.pivotData = [];
+		var data = new Map();
+	
+		for(var i in $scope.salesPerformances) {
+			var sales = $scope.salesPerformances[i];
+			if(data.get(sales.model.name) == null) {
+				var array = [0, 0, 0, 0];
+				array[sales.quarter - 1] = sales.amount;
+				data.set(sales.model.name, array);
+			} else {
+				var array = data.get(sales.model.name);
+				array[sales.quarter - 1] = array[sales.quarter - 1] + sales.amount;
+				data.set(sales.model.name, array);
+			}
+		}
+		
+		data.forEach(function(value, key) {
+			var rec = {name: key, amount: value};
+			$scope.pivotData.push(rec);
+		});
+	}
 	
 	$q.all([
 		    $scope.listBrands(), $scope.listSalesPerformances()
