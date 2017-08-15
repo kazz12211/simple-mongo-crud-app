@@ -1,4 +1,4 @@
-var app = angular.module("app", ['ngRoute', 'ngDialog', 'ui.bootstrap']);
+var app = angular.module("app", ['ngRoute', 'ngDialog', 'ui.bootstrap', 'chart.js']);
 
 app.config(['$routeProvider', function($routeProvider) {
 		

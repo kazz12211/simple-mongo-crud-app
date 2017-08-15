@@ -20,7 +20,8 @@
 - Bootstrap 3.3.7
 - ui-bootstrap 2.5.0
 - ngDialog 0.4.0
-
+- angular-chart 1.1.1
+- chart.js 2.6.0
 
 ## Spring関連
 

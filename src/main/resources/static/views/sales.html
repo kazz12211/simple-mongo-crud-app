@@ -2,29 +2,30 @@
 <div class="panel panel-default">
 	<div class="panel-heading">SALES PERFORMANCE</div>
 	<div class="panel-body">
-		<span class="col-xs-2 col-ms-2 col-md-2 col-lg-2 pull-left">
-			<div class="form-group">
-				<label for="fromYear">Fiscal Year</label>
-				<select id="fromYear" class="form-control" ng-model="selectedFiscalYear" ng-options="year for year in years" ng-change="filter()"></select>
-			</div>
-		</span>
-		<span class="btn btn-primary pull-right" ng-click="linkTo('/newsales/')">
-			<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
+		<span class="btn btn-primary pull-right"
+			ng-click="linkTo('/newsales/')"> <span
+			class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add
 		</span>
 	</div>
+	<div id="table">
 	<table class="table table-striped">
 		<thead>
-		<tr>
-			<th></th>
-			<th colspan="4" class="text-center">{{selectedFiscalYear}}</th>
-		</tr>
-		<tr>
-			<th>Model</th>
-			<th class="col-xs-2 col-ms-2 col-md-2 col-lg-2 text-center">Q1</th>
-			<th class="col-xs-2 col-ms-2 col-md-2 col-lg-2 text-center">Q2</th>
-			<th class="col-xs-2 col-ms-2 col-md-2 col-lg-2 text-center">Q3</th>
-			<th class="col-xs-2 col-ms-2 col-md-2 col-lg-2 text-center">Q4</th>
-		</tr>
+			<tr>
+				<th colspan="5"><span
+					class="col-xs-2 col-ms-2 col-md-2 col-lg-2"><div
+							class="form-group">
+							<label for="fromYear">Fiscal Year</label> <select id="fromYear"
+								class="form-control" ng-model="selectedFiscalYear"
+								ng-options="year for year in years" ng-change="filter()"></select>
+						</div> </span></th>
+			</tr>
+			<tr>
+				<th>Model</th>
+				<th class="col-xs-2 col-ms-2 col-md-2 col-lg-2 text-center">Q1</th>
+				<th class="col-xs-2 col-ms-2 col-md-2 col-lg-2 text-center">Q2</th>
+				<th class="col-xs-2 col-ms-2 col-md-2 col-lg-2 text-center">Q3</th>
+				<th class="col-xs-2 col-ms-2 col-md-2 col-lg-2 text-center">Q4</th>
+			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="data in pivotData">
@@ -36,5 +37,10 @@
 			</tr>
 		</tbody>
 	</table>
+	</div>
+	<hr/>
+	<div id="chart">
+		<canvas id="bar" class="chart chart-bar" chart-data="chartData" chart-labels="chartLabels" chart-series="chartSeries"></canvas>
+	</div>
 </div>
 

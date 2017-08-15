@@ -14,11 +14,15 @@ app.controller("sales_controller", function($scope, $http, $location, $q, ngDial
 	$scope.selectedQuarter = 2;
 	$scope.selectedFiscalYear = 2017;
 	$scope.pivotData = [];
+	$scope.chartData;
+	$scope.chartLabels;
+	$scope.chartSeries;
 	
 	$scope.listSalesPerformances = function() {
 		$http.get("/api/sales", {params: {fiscalYear: $scope.selectedFiscalYear}}).then(function(response) {
 			$scope.salesPerformances = response.data;
 			createPivotData();
+			createChart();
 		}, function(error) {
 			$scope.error = error;
 		})
@@ -108,6 +112,18 @@ app.controller("sales_controller", function($scope, $http, $location, $q, ngDial
 			var rec = {name: key, amount: value};
 			$scope.pivotData.push(rec);
 		});
+	}
+	
+	function createChart() {
+		$scope.chartLabels = ['Q1', 'Q2', 'Q3', 'Q4'];
+		$scope.chartSeries = [];
+		$scope.chartData = [];
+		for(var i in $scope.pivotData) {
+			var data = $scope.pivotData[i];
+			$scope.chartSeries.push(data.name);
+			$scope.chartData.push(data.amount);
+		}
+		console.log($scope.chartData);
 	}
 	
 	$q.all([
