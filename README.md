@@ -14,6 +14,7 @@
 - Ubuntu 16.0.4 LTS
 - Spring Tool Suite 3.8.3 (Eclipse Java EE IDE Neon Release 4.6.0)
 - Java 1.8.0
+- Maven
 - MongoDB 2.6.10
 - jQuery 2.1.1
 - AngularJS 1.6.2
@@ -25,13 +26,98 @@
 
 ## Spring関連
 
+### Mavenプロジェクト
+
+このアプリケーションはSpring BootのMavenプロジェクトです。依存するライブラリについてはpom.xmlを参照してください。
+
+### RestController
+
+@RestControllerアノテーションによりRestControllerを生成します。
+CRUDアプリケーションでは、データの挿入、更新、削除、検索をそれぞれHTTPリクエストのPOST、PUT、DELETE、GETにマッピングすることが一般的なようです。
+
+	package jp.tsubakicraft.mongocrud.controller;
+
+	import java.util.List;
+	
+	import org.springframework.beans.factory.annotation.Autowired;
+	import org.springframework.data.domain.Page;
+	import org.springframework.data.domain.PageRequest;
+	import org.springframework.data.domain.Pageable;
+	import org.springframework.data.domain.Sort;
+	import org.springframework.web.bind.annotation.RequestBody;
+	import org.springframework.web.bind.annotation.RequestMapping;
+	import org.springframework.web.bind.annotation.RequestMethod;
+	import org.springframework.web.bind.annotation.RequestParam;
+	import org.springframework.web.bind.annotation.RestController;
+	
+	import jp.tsubakicraft.mongocrud.model.Brand;
+	import jp.tsubakicraft.mongocrud.service.BrandRepository;
+	
+	@RestController
+	public class BrandController {
+	
+		@Autowired
+		private BrandRepository repo;
+	
+		@RequestMapping(value = "/api/brands/listAll", method = RequestMethod.GET)
+		public List<Brand> listAll() {
+			Sort sort = new Sort(Sort.Direction.ASC, "name");
+			return repo.findAll(sort);
+		}
+	
+		@RequestMapping(value = "/api/brands", method = RequestMethod.GET)
+		public Page<?> listBrands(@RequestParam(value = "page", required = true) int page,
+				@RequestParam(value = "limit", required = true) int limit,
+				@RequestParam(value = "sortColumn", required = true) String column,
+				@RequestParam(value = "sortDir", required = true) String dir) {
+			Sort sort = new Sort(
+					new Sort.Order("asc".equalsIgnoreCase(dir) ? Sort.Direction.ASC : Sort.Direction.DESC, column));
+			Pageable pageRequest = new PageRequest(page, limit, sort);
+			Page<Brand> p = repo.findAll(pageRequest);
+			return p;
+		}
+	
+		@RequestMapping(value = "/api/brands", method = RequestMethod.PUT)
+		public Brand updateBrand(@RequestBody Brand brand) {
+			Brand b = repo.findOne(brand.id);
+			if (b != null) {
+				b.name = brand.name;
+				repo.save(b);
+			}
+			return b;
+		}
+	
+		@RequestMapping(value = "/api/brands", method = RequestMethod.DELETE)
+		public Brand deleteBrand(@RequestBody Brand brand) {
+			repo.delete(brand.id);
+			return brand;
+		}
+	
+		@RequestMapping(value = "/api/brands", method = RequestMethod.POST)
+		public Brand createBrand(@RequestBody Brand brand) {
+			Brand b = new Brand();
+			b.name = brand.name;
+			repo.save(b);
+			return b;
+		}
+	}
+	
+このアプリケーションではUIにui-bootstrapを使ったページネーション機能を実装していますが、ページ単位でオブジェクトを検索するには、PageRequestを使用します。
+例えばBrandオブジェクトの11件目から20件目までを検索するには次のようにPageRequestを引数にしてPagingAndSortingRepositoryのfindAll()を呼び出します。
+
+	int page = 1;
+	int size = 10;
+	Pageable pageRequest = new PageRequest(page, size);
+	Page<Brand> page = repo.findAll(pageRequest);
+	
+
 ## AngularJS関連
 
 ## BootStrap関連
 
 ## MongoRepository関連
 
-MongoRepositoryはCrudRepositoryのサブインターフェースで、データの挿入、更新、削除、検索の機能やページネーションの機能を持ったもの。
+MongoRepositoryはPagingAndSortingRepositoryのサブインターフェースで、データの挿入、更新、削除、検索の機能やページネーションの機能を持ったもの。
 
 ### MongoDBのコンフィグレーション
 
@@ -65,6 +151,7 @@ MongoDBのデータベースの選択を設定しているコードです。
 ### MongoDBのエンティティ
 
 BrandエンティティとModelエンティティの例。
+Modelエンティティは@DBRefアノテーションによりBrandエンティティを参照します。この場合Modelを検索すると参照しているBrandも検索して結合します。
 
  jp.tsubakicraft.mongocrud.modeｌ.Brand.java
  

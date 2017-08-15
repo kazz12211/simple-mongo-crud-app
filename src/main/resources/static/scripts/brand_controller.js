@@ -24,16 +24,27 @@ app.controller("brand_controller", function($scope, $http, $location, $q, ngDial
 	};
 	
 	$scope.createBrand = function() {
-		$http.post("/api/brands", $scope.brand).then(function(response) {
-	        $scope.show = true;
-	        $scope.hide = true;
-	        $scope.hideObj = false;
-	        $scope.showObj = false;
-	        $scope.brandId = "";
-	    	$location.path("/brand");
-		}, function(error) {
-			$scope.error = error;
-		});
+		if($scope.brand.name == null || $scope.brand.name == '') {
+			$scope.message = 'Name is required';
+            ngDialog.open({
+                scope: $scope,
+                template: 'views/ValidationAlert.html',
+                className: 'ngdialog-theme-default',
+                width: 300,
+                lain: true,
+                showClose: false});
+		} else {
+			$http.post("/api/brands", $scope.brand).then(function(response) {
+		        $scope.show = true;
+		        $scope.hide = true;
+		        $scope.hideObj = false;
+		        $scope.showObj = false;
+		        $scope.brandId = "";
+		    	$location.path("/brand");
+			}, function(error) {
+				$scope.error = error;
+			});
+		}
 	};
 	
 	$scope.editBrand = function(brandId) {
@@ -52,7 +63,8 @@ app.controller("brand_controller", function($scope, $http, $location, $q, ngDial
 				ngDialog.openConfirm({
 					scope: $scope,
 					template: 'views/brandDeleteConfirm.html',
-					className: 'ngdialog-theme-default'
+					className: 'ngdialog-theme-default',
+					showClose: false
 				}).then(function(value) {
 					$http.delete("/api/brands", {data: brand, headers: {'Content-Type':'application/json; charset=UTF-8'}}).then(function(response) {
 						$scope.listBrands();
@@ -66,7 +78,8 @@ app.controller("brand_controller", function($scope, $http, $location, $q, ngDial
 					template: '<p>Brand <strong>' + brand.name + '</strong> cannot be deleted. There are ' + count + ' models exists.</p>\
 					<div class="ngdialog-buttons">\
 					<button class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">OK</button></div>',
-					plain: true
+					plain: true,
+					showClose: false
 				});
 			}
 		}, function(error) {

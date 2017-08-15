@@ -12,11 +12,17 @@ app.controller("sales_controller", function($scope, $http, $location, $q, ngDial
 	$scope.quarters = [1, 2, 3, 4];
 	$scope.selectedYear = 2017;
 	$scope.selectedQuarter = 2;
-	$scope.selectedFiscalYear = 2017;
 	$scope.pivotData = [];
 	$scope.chartData;
 	$scope.chartLabels;
 	$scope.chartSeries;
+	$scope.currentPage = 1;
+	$scope.totalItems = 0;
+	$scope.limit = 5;
+	
+	if(!$scope.selectedFiscalYear) {
+		$scope.selectedFiscalYear = 2016;
+	}
 	
 	$scope.listSalesPerformances = function() {
 		$http.get("/api/sales", {params: {fiscalYear: $scope.selectedFiscalYear}}).then(function(response) {
@@ -112,6 +118,20 @@ app.controller("sales_controller", function($scope, $http, $location, $q, ngDial
 			var rec = {name: key, amount: value};
 			$scope.pivotData.push(rec);
 		});
+		
+		$scope.totalItems = $scope.pivotData.length;
+		$scope.currentPage = 1;
+		createPagedPivotData();
+	}
+
+	function createPagedPivotData() {
+		var end = $scope.pivotData.length - 1;
+		var start = ($scope.currentPage - 1) * $scope.limit;
+		if(start > end) {
+			return;
+		}
+		end = start + $scope.limit;
+		$scope.pagedPivotData = $scope.pivotData.slice(start, end);
 	}
 	
 	function createChart() {
@@ -125,6 +145,10 @@ app.controller("sales_controller", function($scope, $http, $location, $q, ngDial
 		}
 		console.log($scope.chartData);
 	}
+	
+	$scope.pageChanged = function() {
+		createPagedPivotData();
+	};
 	
 	$q.all([
 		    $scope.listBrands(), $scope.listSalesPerformances()

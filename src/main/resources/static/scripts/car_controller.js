@@ -31,16 +31,27 @@ app.controller("car_controller", function($scope, $http, $location, $q, ngDialog
 	
 	$scope.createCar = function() {
 		console.log($scope.car);
-		$http.post("/api/cars", $scope.car).then(function(response) {
-	        $scope.show = true;
-	        $scope.hide = true;
-	        $scope.hideObj = false;
-	        $scope.showObj = false;
-	        $scope.carId = "";
-	    	$location.path("/car");
-		}, function(error) {
-			$scope.error = error;
-		});
+		if($scope.car.name == null || $scope.car.name == '') {
+			$scope.message = 'Name is required';
+            ngDialog.open({
+                scope: $scope,
+                template: 'views/ValidationAlert.html',
+                className: 'ngdialog-theme-default',
+                width: 300,
+                lain: true,
+                showClose: false});
+		} else {
+			$http.post("/api/cars", $scope.car).then(function(response) {
+		        $scope.show = true;
+		        $scope.hide = true;
+		        $scope.hideObj = false;
+		        $scope.showObj = false;
+		        $scope.carId = "";
+		    	$location.path("/car");
+			}, function(error) {
+				$scope.error = error;
+			});
+		}
 	};
 	
 	$scope.editCar = function(car) {
@@ -58,7 +69,8 @@ app.controller("car_controller", function($scope, $http, $location, $q, ngDialog
 		ngDialog.openConfirm({
 			scope: $scope,
 			template: 'views/carDeleteConfirm.html',
-			className: 'ngdialog-theme-default'
+			className: 'ngdialog-theme-default',
+			showClose: false
 		}).then(function(value) {
 			$http.delete("/api/cars", {data: car, headers: {'Content-Type':'application/json; charset=UTF-8'}}).then(function(response) {
 				$scope.listCars();

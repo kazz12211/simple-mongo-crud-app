@@ -1,9 +1,9 @@
 <div class="panel panel-default">
 	<div class="panel-heading">ADD A BRAND</div>
-	<form>
+	<form name="brand-form">
 		<div class="form-group">
-			<label for="brand-name">Name</label> <input id="brand-name"
-				type="text" class="form-control" ng-model="brand.name">
+			<label for="brand-name">Name</label> <input name="brand-name"
+				type="text" class="form-control" ng-model="brand.name" required>
 		</div>
 		<button class="btn btn-primary"
 			ng-click="createBrand()">

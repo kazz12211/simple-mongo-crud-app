@@ -26,16 +26,27 @@ app.controller("model_controller", function($scope, $http, $location, $q, ngDial
 	
 	$scope.createModel = function() {
 		console.log($scope.model);
-		$http.post("/api/models", $scope.model).then(function(response) {
-	        $scope.show = true;
-	        $scope.hide = true;
-	        $scope.hideObj = false;
-	        $scope.showObj = false;
-	        $scope.modelId = "";
-	    	$location.path("/model");
-		}, function(error) {
-			$scope.error = error;
-		});
+		if($scope.model.name == null || $scope.model.name == '') {
+			$scope.message = 'Name is required';
+            ngDialog.open({
+                scope: $scope,
+                template: 'views/ValidationAlert.html',
+                className: 'ngdialog-theme-default',
+                width: 300,
+                lain: true,
+                showClose: false});
+		} else {
+			$http.post("/api/models", $scope.model).then(function(response) {
+		        $scope.show = true;
+		        $scope.hide = true;
+		        $scope.hideObj = false;
+		        $scope.showObj = false;
+		        $scope.modelId = "";
+		    	$location.path("/model");
+			}, function(error) {
+				$scope.error = error;
+			});
+		}
 	};
 	
 	$scope.editModel = function(modelId) {
@@ -55,7 +66,8 @@ app.controller("model_controller", function($scope, $http, $location, $q, ngDial
 				ngDialog.openConfirm({
 					scope: $scope,
 					template: 'views/modelDeleteConfirm.html',
-					className: 'ngdialog-theme-default'
+					className: 'ngdialog-theme-default',
+					showClose: false
 				}).then(function(value) {
 					$http.delete("/api/models", {data: model, headers: {'Content-Type':'application/json; charset=UTF-8'}}).then(function(response) {
 						$scope.listModels();
@@ -69,7 +81,8 @@ app.controller("model_controller", function($scope, $http, $location, $q, ngDial
 					template: '<p>Model <strong>' + model.name + '</strong> cannot be deleted. There are ' + count + ' cars exists.</p>\
 					<div class="ngdialog-buttons">\
 					<button class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">OK</button></div>',
-					plain: true
+					plain: true,
+					showClose: false
 				});
 			}
 		});

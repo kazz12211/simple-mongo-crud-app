@@ -14,7 +14,7 @@
 				<th colspan="5"><span
 					class="col-xs-2 col-ms-2 col-md-2 col-lg-2"><div
 							class="form-group">
-							<label for="fromYear">Fiscal Year</label> <select id="fromYear"
+							<label for="fiscalYear">Fiscal Year</label> <select id="fiscalYear"
 								class="form-control" ng-model="selectedFiscalYear"
 								ng-options="year for year in years" ng-change="filter()"></select>
 						</div> </span></th>
@@ -28,7 +28,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="data in pivotData">
+			<tr ng-repeat="data in pagedPivotData">
 				<td>{{data.name}}</td>
 				<td class="text-right">{{data.amount[0]}}</td>
 				<td class="text-right">{{data.amount[1]}}</td>
@@ -37,6 +37,9 @@
 			</tr>
 		</tbody>
 	</table>
+	<div ng-show="totalItems > 0">
+    <ul uib-pagination total-items="totalItems" items-per-page="limit" ng-model="currentPage" ng-change="pageChanged()"></ul>
+	</div>
 	</div>
 	<hr/>
 	<div id="chart">
