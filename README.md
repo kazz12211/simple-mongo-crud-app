@@ -15,17 +15,17 @@
 
 ## 開発環境
 - Ubuntu 16.0.4 LTS
-- Spring Tool Suite 3.8.3 (Eclipse Java EE IDE Neon Release 4.6.0)
+- [Spring Tool Suite 3.8.3 (Eclipse Java EE IDE Neon Release 4.6.0)](https://spring.io/tools/sts) 
 - Java 1.8.0
 - Maven
-- MongoDB 2.6.10
-- jQuery 2.1.1
-- AngularJS 1.6.2
-- Bootstrap 3.3.7
-- ui-bootstrap 2.5.0
-- ngDialog 0.4.0
-- angular-chart 1.1.1
-- chart.js 2.6.0
+- [MongoDB 2.6.10](https://www.mongodb.com/) 
+- [jQuery 2.1.1](https://jquery.com/) 
+- [AngularJS 1.6.2](https://angularjs.org/) 
+- [Bootstrap 3.3.7](https://getbootstrap.com/docs/3.3/getting-started/) 
+- [ui-bootstrap 2.5.0](https://angular-ui.github.io/bootstrap/) 
+- [ngDialog 0.4.0](https://github.com/likeastore/ngDialog) 
+- [angular-chart 1.1.1](http://jtblin.github.io/angular-chart.js/) 
+- [chart.js 2.6.0](http://www.chartjs.org/) 
 
 ## Spring関連
 
