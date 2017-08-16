@@ -26,16 +26,7 @@ app.controller("model_controller", function($scope, $http, $location, $q, ngDial
 	
 	$scope.createModel = function() {
 		console.log($scope.model);
-		if($scope.model.name == null || $scope.model.name == '') {
-			$scope.message = 'Name is required';
-            ngDialog.open({
-                scope: $scope,
-                template: 'views/ValidationAlert.html',
-                className: 'ngdialog-theme-default',
-                width: 300,
-                lain: true,
-                showClose: false});
-		} else {
+		if(!$scope.validateForm()) { 
 			$http.post("/api/models", $scope.model).then(function(response) {
 		        $scope.show = true;
 		        $scope.hide = true;
@@ -61,7 +52,6 @@ app.controller("model_controller", function($scope, $http, $location, $q, ngDial
 		$scope.model = model;
 		$http.get("/api/cars/countModelCar", {params:{modelId: model.id}}).then(function(response) {
 			var count = response.data;
-			console.log(count);
 			if(count == 0) {
 				ngDialog.openConfirm({
 					scope: $scope,
@@ -140,6 +130,20 @@ app.controller("model_controller", function($scope, $http, $location, $q, ngDial
 		}
 		$scope.listModels();
 	};
+	
+	$scope.validateForm = function() {
+		$scope.validationMessages = [];
+		if($scope.model.name == null || $scope.model.name == null) {
+			$scope.validationMessages.push("Name is required.");
+		}
+		if($scope.model.brand == null) {
+			$scope.validationMessages.push("Brand is not selected.");
+		}
+		$scope.hasErrors =  $scope.validationMessages.length > 0;
+		return $scope.hasErrors;
+	};
+	
+	
 	$q.all([
 	    $scope.listBrands(), $scope.listModels()
 	]).then(function(response) {

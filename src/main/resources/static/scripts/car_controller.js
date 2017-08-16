@@ -31,16 +31,7 @@ app.controller("car_controller", function($scope, $http, $location, $q, ngDialog
 	
 	$scope.createCar = function() {
 		console.log($scope.car);
-		if($scope.car.name == null || $scope.car.name == '') {
-			$scope.message = 'Name is required';
-            ngDialog.open({
-                scope: $scope,
-                template: 'views/ValidationAlert.html',
-                className: 'ngdialog-theme-default',
-                width: 300,
-                lain: true,
-                showClose: false});
-		} else {
+		if(!$scope.validateForm()) {
 			$http.post("/api/cars", $scope.car).then(function(response) {
 		        $scope.show = true;
 		        $scope.hide = true;
@@ -159,6 +150,25 @@ app.controller("car_controller", function($scope, $http, $location, $q, ngDialog
 		}
 		$scope.listCars();
 	};
+	
+	$scope.validateForm = function() {
+		$scope.validationMessages = [];
+		if($scope.car.name == null || $scope.car.name == null) {
+			$scope.validationMessages.push("Name is required.");
+		}
+		if($scope.car.model == null) {
+			$scope.validationMessages.push("Model is not selected.");
+		}
+		if($scope.car.price == null || $scope.car.price <= 0) {
+			$scope.validationMessages.push("Price must be greater thant 0.");
+		}
+		if($scope.car.year == null || $scope.car.year <= 1962) {
+			$scope.validationMessages.push("Year must be greater than 1962.");
+		}
+		$scope.hasErrors =  $scope.validationMessages.length > 0;
+		return $scope.hasErrors;
+	};
+
 	
 	$q.all([
 	    $scope.listBrands(), $scope.listCars()

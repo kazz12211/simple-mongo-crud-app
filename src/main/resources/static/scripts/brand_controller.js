@@ -24,16 +24,7 @@ app.controller("brand_controller", function($scope, $http, $location, $q, ngDial
 	};
 	
 	$scope.createBrand = function() {
-		if($scope.brand.name == null || $scope.brand.name == '') {
-			$scope.message = 'Name is required';
-            ngDialog.open({
-                scope: $scope,
-                template: 'views/ValidationAlert.html',
-                className: 'ngdialog-theme-default',
-                width: 300,
-                lain: true,
-                showClose: false});
-		} else {
+		if(!$scope.validateForm()) {
 			$http.post("/api/brands", $scope.brand).then(function(response) {
 		        $scope.show = true;
 		        $scope.hide = true;
@@ -131,5 +122,14 @@ app.controller("brand_controller", function($scope, $http, $location, $q, ngDial
 		$scope.listBrands();
 	};
 	
+	$scope.validateForm = function() {
+		$scope.validationMessages = [];
+		if($scope.brand.name == null || $scope.brand.name == null) {
+			$scope.validationMessages.push("Name is required.");
+		}
+		$scope.hasErrors =  $scope.validationMessages.length > 0;
+		return $scope.hasErrors;
+	};
+
 	$scope.listBrands();
 });

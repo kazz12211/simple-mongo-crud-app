@@ -8,7 +8,7 @@ app.controller("sales_controller", function($scope, $http, $location, $q, ngDial
 	$scope.brands = [];
 	$scope.selectedBrand = null;
 	$scope.selectedModel = null;
-	$scope.years = [2016, 2017];
+	$scope.years = [2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017];
 	$scope.quarters = [1, 2, 3, 4];
 	$scope.selectedYear = 2017;
 	$scope.selectedQuarter = 2;
@@ -37,12 +37,14 @@ app.controller("sales_controller", function($scope, $http, $location, $q, ngDial
 	$scope.createSalesPerformance = function() {
 		$scope.salesPerformance.year = $scope.selectedYear;
 		$scope.salesPerformance.quarter = $scope.selectedQuarter;
-		$http.post("/api/sales", $scope.salesPerformance).then(function(response) {
-			$scope.salesPerformanceId = "";
-			$location.path("/sales");
-		}, function(error) {
-			$scope.error = error;
-		});
+		if(!$scope.validateForm()) {
+			$http.post("/api/sales", $scope.salesPerformance).then(function(response) {
+				$scope.salesPerformanceId = "";
+				$location.path("/sales");
+			}, function(error) {
+				$scope.error = error;
+			});
+		}
 	};
 	
 	$scope.deleteSalesPerformance = function() {
@@ -150,6 +152,24 @@ app.controller("sales_controller", function($scope, $http, $location, $q, ngDial
 		createPagedPivotData();
 	};
 	
+	$scope.validateForm = function() {
+		$scope.validationMessages = [];
+		if($scope.salesPerformance.model == null) {
+			$scope.validationMessages.push("Model is not selected.");
+		}
+		if($scope.salesPerformance.year == null || $scope.salesPerformance.year <= 1962) {
+			$scope.validationMessages.push("Year must be greater than 1962.");
+		}
+		if($scope.salesPerformance.quarter == null || $scope.salesPerformance.quater < 1 || $scope.salesPerformance.quater > 4) {
+			$scope.validationMessages.push("Quarter must be between 1 and 4.");
+		}
+		if($scope.salesPerformance.amount == null || $scope.salesPerformance.amount <= 0) {
+			$scope.validationMessages.push("Amount must be greater than 0.");
+		}
+		$scope.hasErrors =  $scope.validationMessages.length > 0;
+		return $scope.hasErrors;
+	};
+
 	$q.all([
 		    $scope.listBrands(), $scope.listSalesPerformances()
 		]).then(function(response) {

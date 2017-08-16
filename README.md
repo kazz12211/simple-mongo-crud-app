@@ -2,9 +2,11 @@
 
 
 
-このサンプルアプリケーションはサーバーサイドにSpring Boot、クライアントサイドにAngularJSを使い、バックエンドのMongoDBをアクセスする業務アプリケーションの例を示します。
+このサンプルアプリケーションはサーバーサイドにSpring Boot、クライアントサイドにAngularJSを使い、バックエンドのMongoDBをアクセスする業務アプリケーションの例です。
 
 データベースにはbrand（メーカー）、model（モデル）、car（自動車）、salesperformance（販売実績）のコレクションがあります。これらのコレクションの新規追加、更新、削除、検索の機能と販売実績をグラフ表示する機能を持たせます。
+
+この文書はアプリケーションを理解する上で必要になる主要な技術的なテーマについてのメモです。
 
 *注意
 このプロジェクトは諸機能の開発を終えていないため、現時点ですべての機能が正しく動作しません。*
@@ -113,8 +115,42 @@ CRUDアプリケーションでは、データの挿入、更新、削除、検�
 
 ## AngularJS関連
 
+### HTMLテンプレートの部品化 （$routeProviderの使用）
+
+### REST APIの呼び出し （$httpの使用）
+
+### フォームの入力チェック
+
+### 関数の順次実行 （$qの使用）
+
+### ページネーション （ui-bootstrapの使用） 
+
+### テーブルのカラムソート
+
 ## BootStrap関連
 
+### Bootstrap CSSのオーバーライド
+Bootstrap CSSに限定されたことではありませんがCSSのオーバーライドの方法です。
+次のコードはBootstrapのナビゲーションバーのスタイルをオーバーライドしています。HTMLファイルのCSSを読み込んでいる部分で、Bootstrap CSSよりも後に読み込むように設定します。
+
+	.navbar {
+		margin-bottom: 1px;
+	        border-radius: 0px;
+	}
+	
+	.navbar-inverse {
+		background-color: rgb(12, 140, 213);
+		border-color: rgb(12,140,213);	
+	}
+	
+	.navbar-inverse .navbar-brand {
+		color: #fff;
+	}
+	
+	.navbar-inverse .navbar-nav>li>a {
+		color: #fff;
+	}
+	
 ## MongoRepository関連
 
 MongoRepositoryはPagingAndSortingRepositoryのサブインターフェースで、データの挿入、更新、削除、検索の機能やページネーションの機能を持ったもの。
