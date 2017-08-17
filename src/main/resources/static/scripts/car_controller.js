@@ -21,7 +21,6 @@ app.controller("car_controller", function($scope, $http, $location, $q, ngDialog
 	$scope.listCars = function() {
 		$http.get("/api/cars", {params: {page: $scope.page, limit: $scope.limit, sortColumn: $scope.sortColumn, sortDir: $scope.sortDir}}).then(function(response) {
 			$scope.cars = response.data;
-			console.log($scope.cars);
 			$scope.currentPage = $scope.cars.number+1;
 			$scope.totalItems = $scope.cars.totalElements;
 		}, function(error) {
@@ -30,7 +29,6 @@ app.controller("car_controller", function($scope, $http, $location, $q, ngDialog
 	};
 	
 	$scope.createCar = function() {
-		console.log($scope.car);
 		if(!$scope.validateForm()) {
 			$http.post("/api/cars", $scope.car).then(function(response) {
 		        $scope.show = true;
@@ -109,7 +107,6 @@ app.controller("car_controller", function($scope, $http, $location, $q, ngDialog
 	$scope.listBrands = function() {
 		$http.get("/api/brands/listAll").then(function(response) {
 			$scope.brands = response.data;
-			console.log("List all brands : " + JSON.stringify($scope.brands));
 		}, function(error) {
 			$scope.error = error;
 		});
@@ -118,14 +115,12 @@ app.controller("car_controller", function($scope, $http, $location, $q, ngDialog
 	$scope.listBrandModels = function(brand) {
 		$http.get("/api/models/listBrandModels", {params:{brandId: brand.id}}).then(function(response) {
 			$scope.models = response.data;
-			console.log("List all models : " + JSON.stringify($scope.models));
 		}, function(error) {
 			$scope.error = error;
 		});
 	};
 
 	$scope.selectedBrandChanged = function() {
-		console.log("Selected brand : " + JSON.stringify($scope.selectedBrand));
 		if($scope.car.model == null || $scope.car.model.brand == null || $scope.car.model.brand.id != $scope.selectedBrand.id) {
 			$q.all([$scope.listBrandModels($scope.selectedBrand)])
 			.then(function(response) {

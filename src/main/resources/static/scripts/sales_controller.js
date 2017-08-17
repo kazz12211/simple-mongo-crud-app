@@ -62,7 +62,6 @@ app.controller("sales_controller", function($scope, $http, $location, $q, ngDial
 	$scope.listBrands = function() {
 		$http.get("/api/brands/listAll").then(function(response) {
 			$scope.brands = response.data;
-			console.log("List all brands : " + JSON.stringify($scope.brands));
 		}, function(error) {
 			$scope.error = error;
 		});
@@ -71,14 +70,12 @@ app.controller("sales_controller", function($scope, $http, $location, $q, ngDial
 	$scope.listBrandModels = function(brand) {
 		$http.get("/api/models/listBrandModels", {params:{brandId: brand.id}}).then(function(response) {
 			$scope.models = response.data;
-			console.log("List all models : " + JSON.stringify($scope.models));
 		}, function(error) {
 			$scope.error = error;
 		});
 	};
 
 	$scope.selectedBrandChanged = function() {
-		console.log("Selected brand : " + JSON.stringify($scope.selectedBrand));
 		if($scope.salesPerformance.model == null || $scope.salesPerformance.model.brand == null || $scope.salesPerformance.model.brand.id != $scope.selectedBrand.id) {
 			$q.all([$scope.listBrandModels($scope.selectedBrand)])
 			.then(function(response) {
@@ -101,6 +98,7 @@ app.controller("sales_controller", function($scope, $http, $location, $q, ngDial
 	
 	function createPivotData() {
 		$scope.pivotData = [];
+		
 		var data = new Map();
 	
 		for(var i in $scope.salesPerformances) {
@@ -117,7 +115,7 @@ app.controller("sales_controller", function($scope, $http, $location, $q, ngDial
 		}
 		
 		data.forEach(function(value, key) {
-			var rec = {name: key, amount: value};
+			var rec = {name: key, amount: value, selected: true};
 			$scope.pivotData.push(rec);
 		});
 		
@@ -127,10 +125,15 @@ app.controller("sales_controller", function($scope, $http, $location, $q, ngDial
 	}
 
 	function createPagedPivotData() {
-		var end = $scope.pivotData.length - 1;
-		var start = ($scope.currentPage - 1) * $scope.limit;
-		if(start > end) {
-			return;
+		if($scope.pivotData.length == 0) {
+			$scope.pagedPivotData = [];
+		} else {
+			var end = $scope.pivotData.length - 1;
+			var start = ($scope.currentPage - 1) * $scope.limit;
+			if(start > end) {
+				$scope.pagedPivotData = [];
+				return;
+			}
 		}
 		end = start + $scope.limit;
 		$scope.pagedPivotData = $scope.pivotData.slice(start, end);
@@ -140,12 +143,12 @@ app.controller("sales_controller", function($scope, $http, $location, $q, ngDial
 		$scope.chartLabels = ['Q1', 'Q2', 'Q3', 'Q4'];
 		$scope.chartSeries = [];
 		$scope.chartData = [];
+		$scope.chartOptions = { legend: { display: true } };
 		for(var i in $scope.pivotData) {
 			var data = $scope.pivotData[i];
 			$scope.chartSeries.push(data.name);
 			$scope.chartData.push(data.amount);
 		}
-		console.log($scope.chartSeries);
 	}
 	
 	$scope.pageChanged = function() {
@@ -169,7 +172,9 @@ app.controller("sales_controller", function($scope, $http, $location, $q, ngDial
 		$scope.hasErrors =  $scope.validationMessages.length > 0;
 		return $scope.hasErrors;
 	};
+	
 
+	
 	$q.all([
 		    $scope.listBrands(), $scope.listSalesPerformances()
 		]).then(function(response) {

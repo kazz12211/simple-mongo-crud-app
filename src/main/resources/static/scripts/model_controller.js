@@ -16,7 +16,6 @@ app.controller("model_controller", function($scope, $http, $location, $q, ngDial
 	$scope.listModels = function() {
 		$http.get("/api/models", {params: {page: $scope.page, limit: $scope.limit, sortColumn: $scope.sortColumn, sortDir: $scope.sortDir}}).then(function(response) {
 			$scope.models = response.data;
-			console.log($scope.models);
 			$scope.currentPage = $scope.models.number+1;
 			$scope.totalItems = $scope.models.totalElements;
 		}, function(error) {
@@ -25,7 +24,6 @@ app.controller("model_controller", function($scope, $http, $location, $q, ngDial
 	};
 	
 	$scope.createModel = function() {
-		console.log($scope.model);
 		if(!$scope.validateForm()) { 
 			$http.post("/api/models", $scope.model).then(function(response) {
 		        $scope.show = true;
@@ -114,8 +112,6 @@ app.controller("model_controller", function($scope, $http, $location, $q, ngDial
 	$scope.listBrands = function() {
 		$http.get("/api/brands/listAll").then(function(response) {
 			$scope.brands = response.data;
-			console.log("List all brands:");
-			console.log($scope.brands);
 		}, function(error) {
 			$scope.error = error;
 		});

@@ -30,10 +30,10 @@
 		<tbody>
 			<tr ng-repeat="data in pagedPivotData">
 				<td>{{data.name}}</td>
-				<td class="text-right">{{data.amount[0]}}</td>
-				<td class="text-right">{{data.amount[1]}}</td>
-				<td class="text-right">{{data.amount[2]}}</td>
-				<td class="text-right">{{data.amount[3]}}</td>
+				<td class="text-right">{{data.amount[0]|number}}</td>
+				<td class="text-right">{{data.amount[1]|number}}</td>
+				<td class="text-right">{{data.amount[2]|number}}</td>
+				<td class="text-right">{{data.amount[3]|number}}</td>
 			</tr>
 		</tbody>
 	</table>
@@ -43,7 +43,7 @@
 	</div>
 	<hr/>
 	<div id="chart">
-		<canvas id="bar" class="chart chart-bar" chart-data="chartData" chart-labels="chartLabels" chart-series="chartSeries"></canvas>
+		<canvas id="bar" class="chart chart-bar" chart-data="chartData" chart-labels="chartLabels" chart-series="chartSeries" chart-options="chartOptions"></canvas>
 	</div>
 </div>
 

@@ -15,7 +15,6 @@ app.controller("brand_controller", function($scope, $http, $location, $q, ngDial
 	$scope.listBrands = function() {
 		$http.get("/api/brands", {params: {page: $scope.page, limit: $scope.limit, sortColumn: $scope.sortColumn, sortDir: $scope.sortDir}}).then(function(response) {
 			$scope.brands = response.data;
-			console.log($scope.brands);
 			$scope.currentPage = $scope.brands.number+1;
 			$scope.totalItems = $scope.brands.totalElements;
 		}, function(error) {

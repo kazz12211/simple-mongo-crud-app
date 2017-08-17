@@ -26,7 +26,7 @@
 					<a ng-hide="hide" ng-click="undoEdit()"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a>
 				</td>
 				<td ng-hide="car.id==carId">{{car.name}}</td>
-				<td ng-hide="car.id==carId">{{car.price}}</td>
+				<td ng-hide="car.id==carId" class="text-right">{{car.price|number}}</td>
 				<td ng-hide="car.id==carId">{{car.model.brand.name}}</td>
 				<td ng-hide="car.id==carId">{{car.model.name}}</td>
 				<td ng-hide="car.id==carId">{{car.year}}</td>
