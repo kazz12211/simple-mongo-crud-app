@@ -145,7 +145,7 @@ app.controller("sales_controller", function($scope, $http, $location, $q, ngDial
 			$scope.chartSeries.push(data.name);
 			$scope.chartData.push(data.amount);
 		}
-		console.log($scope.chartData);
+		console.log($scope.chartSeries);
 	}
 	
 	$scope.pageChanged = function() {
