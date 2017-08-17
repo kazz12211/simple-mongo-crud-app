@@ -12,6 +12,21 @@
 *注意
 このプロジェクトは諸機能の開発を終えていないため、現時点ですべての機能が正しく動作しません。*
 
+## とりあえず動かしてみる
+
+事前にMongoDBをインストールしてmongodを動かしておきます。mongodbの認証機能は設定しない状態にしておきます。（インストールして何も設定しないで起動した状態です）
+
+このプロジェクトをgit cloneします。適当なディレクトリを作成してそのディレクトリで次のコマンドを実行します。
+
+	$ git clone https://github.com/kazz12211/simple-mongo-crud-app.git
+
+同ディレクトリで次のコマンドを実行してアプリケーションを起動します。
+
+	$ ./mvnw spring-boot:run
+
+ブラウザから次のURLにアクセスします。
+
+	http://localhost:8080
 
 ## 開発環境
 - Ubuntu 16.0.4 LTS
@@ -113,20 +128,177 @@ CRUDアプリケーションでは、データの挿入、更新、削除、検�
 	Pageable pageRequest = new PageRequest(page, size);
 	Page<Brand> page = repo.findAll(pageRequest);
 	
+### Natural routesを使用した際のPage Not Foundエラーへの対処
+
+	package jp.tsubakicraft.mongocrud.controller;
+	
+	import org.springframework.stereotype.Controller;
+	import org.springframework.web.bind.annotation.RequestMapping;
+	
+	@Controller
+	public class ErrorHandler {
+		@RequestMapping(value = "/{[path:[^\\.]*}")
+		public String redirect() {
+		  return "forward:/";
+		}
+	}
+	
 
 ## AngularJS関連
 
 ### HTMLテンプレートの部品化 （$routeProviderの使用）
 
+	in app.js
+	
+	var app = angular.module("app", ['ngRoute', 'ngDialog', 'ui.bootstrap', 'chart.js']);
+	
+	app.config(['$routeProvider', function($routeProvider) {
+			
+	    $routeProvider
+		.when("/", {
+			controller: 'home_controller',
+			templateUrl: 'views/home.html'
+		})
+		.when("/brand/", {
+			controller: 'brand_controller',
+			templateUrl: 'views/brands.html'
+		})
+		.when("/newbrand/", {
+			controller: 'brand_controller',
+			templateUrl: 'views/newBrand.html'
+		})
+		.when("/model/", {
+			controller: 'model_controller',
+			templateUrl: 'views/models.html'
+		})
+		.when("/newmodel/", {
+			controller: 'model_controller',
+			templateUrl: 'views/newModel.html'
+		})
+		.when("/car/", {
+			controller: 'car_controller',
+			templateUrl: 'views/cars.html'
+		})
+		.when("/newcar/", {
+			controller: 'car_controller',
+			templateUrl: 'views/newCar.html'
+		})
+		.when("/sales/", {
+			controller: 'sales_controller',
+			templateUrl: 'views/sales.html'
+		})
+		.when("/newsales/", {
+			controller: 'sales_controller',
+			templateUrl: 'views/newSales.html'
+		})
+		.otherwise({
+			redirectTo: "/"
+		});
+	}]);
+	app.config(['$locationProvider', function($locationProvider) {
+		$locationProvider.html5Mode(true);
+	}]);
+	
+
+
+
 ### REST APIの呼び出し （$httpの使用）
+
+例えばBrandController (REST Controller)の/api/brandsルートにGETリクエストを行う場合は、$http.get()を使います。(brand_controller.jsを参照)
+
+	app.controller("brand_controller", function($scope, $http, $location, $q, ngDialog) {
+		$scope.brands = [];
+	....
+	....
+		$scope.listBrands = function() {
+			$http.get("/api/brands", {params: {page: $scope.page, limit: $scope.limit, sortColumn: $scope.sortColumn, sortDir: $scope.sortDir}}).then(function(response) {
+				// データを正常に受信できた
+				$scope.brands = response.data;
+				....
+				....
+			}, function(error) {
+				// HTTPリクエストがエラーになった
+				....
+			});
+		};
+	....
+	....
+	
+		$scope.listBrands();
+	});
+	
 
 ### フォームの入力チェック
 
-### 関数の順次実行 （$qの使用）
+ValidationはHTMLテンプレート内で行う方法もありますが、このアプリケーションではコントローラーで行っています。(brand_controller.jsを参照)
+
+	....
+	....
+	$scope.createBrand = function() {
+		if(!$scope.validateForm()) {
+			$http.post("/api/brands", $scope.brand).then(function(response) {
+		        $scope.show = true;
+		        $scope.hide = true;
+		        $scope.hideObj = false;
+		        $scope.showObj = false;
+		        $scope.brandId = "";
+		    	$location.path("/brand");
+			}, function(error) {
+				$scope.error = error;
+			});
+		}
+	};
+	....
+	....
+	$scope.validateForm = function() {
+		$scope.validationMessages = [];
+		if($scope.brand.name == null || $scope.brand.name == null) {
+			$scope.validationMessages.push("Name is required.");
+		}
+		$scope.hasErrors =  $scope.validationMessages.length > 0;
+		return $scope.hasErrors;
+	};
+
+
+HTMLテンプレート側にはエラーがあった（$scopeのhasErrorsがtrueの）場合に表示するブロックを用意しておきます。
+
+	<div class="panel panel-default">
+		<div class="panel-heading">ADD A BRAND</div>
+		<form name="brand-form">
+			<div ng-show="hasErrors">
+				<div class="alert alert-danger" role="alert">
+					<div ng-repeat="message in validationMessages">
+						<strong>{{message}}</strong></br/>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="brand-name">Name</label> <input name="brand-name"
+					type="text" class="form-control" ng-model="brand.name" required>
+			</div>
+			<button class="btn btn-primary" type="submit" ng-click="createBrand()">
+				<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+				Save
+			</button>
+	
+			<button class="btn btn-default" ng-click="linkTo('/brand/')">
+				<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+				Cancel
+			</button>
+		</form>
+	</div>
+	
+
 
 ### ページネーション （ui-bootstrapの使用） 
 
+[ui-bootstrapのページ](https://angular-ui.github.io/bootstrap/) に方法が解説されています。
+
+
 ### テーブルのカラムソート
+
+
+
 
 ## BootStrap関連
 
