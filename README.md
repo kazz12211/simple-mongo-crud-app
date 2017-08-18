@@ -14,7 +14,7 @@
 
 ## とりあえず動かしてみる
 
-事前にMongoDBをインストールしてmongodを動かしておきます。mongodbの認証機能は設定しない状態にしておきます。（インストールして何も設定しないで起動した状態です）
+事前にMongoDBをインストールしてmongodを起動しておきます。mongodbの認証機能は設定しない状態にしておきます。（インストールして何も設定しないで起動した状態です）
 
 このプロジェクトをgit cloneします。適当なディレクトリを作成してそのディレクトリで次のコマンドを実行します。
 
@@ -297,8 +297,35 @@ HTMLテンプレート側にはエラーがあった（$scopeのhasErrorsがtrue
 
 ### テーブルのカラムソート
 
+コントローラー側のコード。ソートするカラムの名前とソート方法を指定。（このアプリケーションの場合はソート方法はASCかDESCの２種類）
+sort()関数はHTMLテンプレートからカラムの名前を引数にして呼び出されます。引数として渡されたカラムが前回と同じカラムなら、昇順・降順を切り替え、前回と違うカラムなら昇順に設定してカラム名を更新します。最後にDBを再検索します。（ページネーションした検索なので１回の検索で発生するデータベースとのトラフィックが小さいので再検索していますが、検索件数が多い場合はメモリ内でソートした方が良いかもしれません）
 
+	app.controller("model_controller", function($scope, $http, $location, $q, ngDialog) {
+		....
+		....
+	
+		$scope.sortColumn = "name";
+		$scope.sortDir = "ASC";
+		....
+		....
+		$scope.sort = function(column) {
+			if($scope.sortColumn == column) {
+				$scope.sortDir = $scope.sortDir == "ASC" ? "DESC" : "ASC";
+			} else {
+				$scope.sortDir = "ASC";
+				$scope.sortColumn = column;
+			}
+			$scope.listModels();
+		};
+	
+	});
+	
+HTMLテンプレート側はカラムのヘッダーにマウスクリックしたときに実行するコントローラーの関数を指定します。
 
+	<th class="col-xs-3 col-ms-3 col-md-3 col-lg-4 sortableTableColumn" ng-click="sort('name')">Name</th>
+
+尚、テーブルに表示するデータのページネーションやソートのような機能[DataTable.js](https://datatables.net/) のようなライブラリを使うとより簡単に行なえますので、アプリケーションを開発する際には検討してみてください。
+	
 
 ## BootStrap関連
 
